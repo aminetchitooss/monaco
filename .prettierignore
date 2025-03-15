@@ -1,0 +1,15 @@
+.azure-pipelines
+.azuredevops
+.VSCodeCounter
+coverage
+dist
+e2e
+junit
+node_modules
+.angular
+package-lock.json
+package.json
+.env
+src/styles.bootstrap.custom.scss
+android
+ios
