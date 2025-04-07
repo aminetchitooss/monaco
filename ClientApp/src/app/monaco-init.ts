@@ -30,3 +30,69 @@ export function registerCustomCompletionProvider() {
   });
   isProviderRegistered = true;
 }
+
+export function enforceTyping() {
+  monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+    validate: true,
+    allowComments: false,
+    schemas: [
+      {
+        uri: 'http://myserver/query-format-schema.json',
+        fileMatch: ['*'],
+        schema: {
+          type: 'object',
+          required: ['queries'],
+          properties: {
+            queries: {
+              type: 'object',
+              description: 'Mapping from keys to query definitions.',
+              additionalProperties: {
+                type: 'array',
+                description: 'A query definition array: [string, string[], string[], string, object].',
+                minItems: 5,
+                maxItems: 5
+              }
+            },
+            row_based: {
+              type: 'boolean',
+              description: 'Indicates if the data is row based.'
+            },
+            stream_response: {
+              type: 'boolean',
+              description: 'Enables stream response.'
+            },
+            keep_zeroes: {
+              type: 'boolean',
+              description: 'Keeps zero values if set to true.'
+            },
+            disable_nighthawk: {
+              type: 'boolean',
+              description: 'Disables nighthawk feature.'
+            },
+            max_query_duration: {
+              type: 'number',
+              description: 'Maximum query duration in milliseconds.'
+            },
+            log_level: {
+              type: 'string',
+              description: 'The log level setting.'
+            },
+            update_tolerance: {
+              type: 'number',
+              description: 'Tolerance value for updates.'
+            },
+            column_expression: {
+              type: 'object',
+              description: 'Mapping for column expressions.',
+              additionalProperties: {
+                type: 'object',
+                description: 'An object representing a column expression.'
+              }
+            }
+          },
+          additionalProperties: false
+        }
+      }
+    ]
+  });
+}
