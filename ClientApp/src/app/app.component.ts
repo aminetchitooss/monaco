@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { JsonV3Component } from './json-editor/json-v3.component';
 import { FormsModule } from '@angular/forms';
+import { CreditSubstitutionSelectorsComponent } from './credit-substitution-selectors/credit-substitution-selectors.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [JsonV3Component, FormsModule],
+  imports: [JsonV3Component, FormsModule, CreditSubstitutionSelectorsComponent],
   template: `
     <h1>hola</h1>
 
@@ -14,6 +15,7 @@ import { FormsModule } from '@angular/forms';
     <app-json-editor [(ngModel)]="jsonValue" />
     <button (click)="log()">OIIII</button>
     <!--    <h1>Mundo</h1>-->
+    <app-credit-substitution-selectors />
   `,
   styleUrl: './app.component.scss'
 })

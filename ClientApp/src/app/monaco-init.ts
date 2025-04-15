@@ -77,6 +77,10 @@ export function enforceTyping() {
               type: 'string',
               description: 'The log level setting.'
             },
+            example: {
+              type: 'string',
+              description: 'The log level setting.'
+            },
             update_tolerance: {
               type: 'number',
               description: 'Tolerance value for updates.'

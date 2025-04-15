@@ -39,7 +39,10 @@ export class JsonV3Component implements OnInit, OnDestroy, ControlValueAccessor 
         value: this.value(),
         language: 'json',
         minimap: { enabled: false },
-        automaticLayout: true
+        automaticLayout: true,
+        autoIndent: 'full',
+        formatOnType: true,
+        formatOnPaste: true
       });
       registerCustomCompletionProvider();
       enforceTyping();

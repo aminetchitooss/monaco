@@ -1,0 +1,27 @@
+<div style="margin-top: 20px;">
+    <p><strong>Template:</strong> {{ templateString }}</p>
+    <p><strong>Output:</strong> {{ getOutputString() }}</p>
+</div>
+
+<ng-container [formGroup]="form">
+    <div class="items" formArrayName="items">
+        @for (item of items; let i = $index; track item) {
+
+            <mat-form-field  >
+                <mat-label>{{ item.description }}</mat-label>
+                <mat-select
+                        [formControlName]="i"
+                        [multiple]="item.multi"
+                        [placeholder]="'Select ' + item.description"
+                >
+                    @for (option of item.substitutionElements; track option.value) {
+                        <mat-option [value]="option.value">
+                            {{ option.displayName }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+        }
+    </div>
+</ng-container>
