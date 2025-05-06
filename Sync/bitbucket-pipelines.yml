@@ -1,0 +1,22 @@
+image: node:20
+
+pipelines:
+  pull-requests:
+    "**":
+      - step:
+          name: Validate JSON Files
+          caches:
+            - node
+          script:
+            - npm install
+            - node scripts/precheck.mjs
+
+  branches:
+    main:
+      - step:
+          name: Sync Credit registry Database
+          caches:
+            - node
+          script:
+            - npm install
+            - node scripts/sync.mjs
