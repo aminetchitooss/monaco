@@ -1,0 +1,75 @@
+pipeline {
+    agent any
+
+    environment {
+        NODE_ENV = 'development'
+    }
+
+    parameters {
+        string(name: 'ACTION_TYPE', defaultValue: '', description: 'Specify PR for precheck, POST_MERGE for sync')
+    }
+
+    stages {
+        stage('Checkout Source') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Node Dependencies') {
+            steps {
+                script {
+                    if (fileExists('package.json')) {
+                        sh 'npm install'
+                    } else {
+                        echo 'No package.json found. Skipping npm install.'
+                    }
+                }
+            }
+        }
+
+        stage('Get Last Committer Email') {
+            steps {
+                script {
+                    // Use full email output without quotes
+                    env.LAST_COMMIT_EMAIL = sh(
+                        script: "git log -1 --pretty=format:%ae",
+                        returnStdout: true
+                    ).trim()
+
+                    if (!env.LAST_COMMIT_EMAIL || env.LAST_COMMIT_EMAIL == '') {
+                        error "Could not determine the last committer's email."
+                    }
+
+                    echo "Last Committer Email: ${env.LAST_COMMIT_EMAIL}"
+                }
+            }
+        }
+
+        stage('Run Appropriate Script') {
+            steps {
+                script {
+                    switch (params.ACTION_TYPE) {
+                        case 'PR':
+                            sh "node scripts/precheck.js '${env.LAST_COMMIT_EMAIL}'"
+                            break
+                        case 'POST_MERGE':
+                            sh "node scripts/syncdb.js '${env.LAST_COMMIT_EMAIL}'"
+                            break
+                        default:
+                            error "Invalid or missing ACTION_TYPE parameter. Must be PR or POST_MERGE."
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Pipeline execution completed."
+        }
+        failure {
+            echo "Pipeline failed."
+        }
+    }
+}
